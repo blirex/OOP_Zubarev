@@ -7,3 +7,6 @@
 ## Завдання 1 
 
 - [Завдання 1](oop_zubarev/task1/task1.md)
+
+## Завдання 2
+- [Завдання 2](oop_zubarev/task2/task2.md)
