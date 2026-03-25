@@ -14,7 +14,7 @@ public class java2 {
 
         public CalculationData(double alpha) {
             this.alpha = alpha;
-            this.timestamp = System.currentTimeMillis();
+            this.timestamp = System.currentTimeMillis(); 
         }
 
         public double getAlpha() {
