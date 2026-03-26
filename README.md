@@ -13,3 +13,6 @@
 
 ## Завдання 3
 - [Завдання 3](oop_zubarev/task3/task3.md)
+
+## Завдання 4
+- [Завдання 4](oop_zubarev/task4/task4.md)
