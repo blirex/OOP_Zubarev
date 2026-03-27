@@ -1,7 +1,6 @@
 import java.io.*;
 import java.util.*;
 
-/** Лабораторна №3 */
 public class java3 {
 
     /* ===================== DATA ===================== */

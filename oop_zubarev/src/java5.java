@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class java4 {
+public class java5 {
 
     /* ===================== DATA ===================== */
 
@@ -17,10 +17,6 @@ public class java4 {
             integerValue = i;
             maxOnes = m;
         }
-
-        public double getAlpha() { return alpha; }
-        public int getIntegerValue() { return integerValue; }
-        public int getMaxOnes() { return maxOnes; }
     }
 
     /* ===================== CALCULATOR ===================== */
@@ -28,7 +24,6 @@ public class java4 {
     static class Calculator {
 
         public static CalculationData calculate(double alpha) {
-
             double x = 10 * Math.cos(alpha);
             double s = Math.pow(x, 2) + Math.pow(x, 3);
 
@@ -49,6 +44,42 @@ public class java4 {
                 } else cur = 0;
             }
             return max;
+        }
+    }
+
+    /* ===================== COMMAND ===================== */
+
+    interface Command {
+        void execute();
+        void undo();
+    }
+
+    /* ===================== SINGLETON ===================== */
+
+    static class CommandManager {
+
+        private static CommandManager instance;
+        private Stack<Command> history = new Stack<>();
+
+        private CommandManager() {}
+
+        public static CommandManager getInstance() {
+            if (instance == null)
+                instance = new CommandManager();
+            return instance;
+        }
+
+        public void executeCommand(Command c) {
+            c.execute();
+            history.push(c);
+        }
+
+        public void undo() {
+            if (!history.isEmpty()) {
+                history.pop().undo();
+            } else {
+                System.out.println("Немає що скасовувати!");
+            }
         }
     }
 
@@ -136,7 +167,7 @@ public class java4 {
 
         // overriding
         public void init(double step) {
-            System.out.println("Інiціаiізацiя...");
+            System.out.println("Iнiціалiзацiя...");
             super.viewInit();
         }
 
@@ -165,12 +196,75 @@ public class java4 {
         }
     }
 
-    /* ===================== TABLE FACTORY ===================== */
-
     static class ViewableTable extends ViewableResult {
         @Override
         public View getView() {
             return new ViewTable();
+        }
+    }
+
+    /* ===================== COMMANDS ===================== */
+
+    static class InitCommand implements Command {
+
+        private View view;
+        private ArrayList<CalculationData> backup;
+
+        public InitCommand(View v) {
+            view = v;
+        }
+
+        public void execute() {
+            if (view instanceof ViewResult) {
+                backup = new ArrayList<>(((ViewResult) view).list);
+            }
+            view.viewInit();
+            System.out.println("Згенеровано!");
+        }
+
+        public void undo() {
+            if (view instanceof ViewResult && backup != null) {
+                ((ViewResult) view).list = backup;
+                System.out.println("Undo виконано!");
+            }
+        }
+    }
+
+    static class ShowCommand implements Command {
+
+        private View view;
+
+        public ShowCommand(View v) {
+            view = v;
+        }
+
+        public void execute() {
+            view.viewShow();
+        }
+
+        public void undo() {
+            System.out.println("Немає що скасовувати для показу");
+        }
+    }
+
+    /* ===================== MACRO ===================== */
+
+    static class MacroCommand implements Command {
+
+        private List<Command> commands = new ArrayList<>();
+
+        public void add(Command c) {
+            commands.add(c);
+        }
+
+        public void execute() {
+            for (Command c : commands)
+                c.execute();
+        }
+
+        public void undo() {
+            for (int i = commands.size() - 1; i >= 0; i--)
+                commands.get(i).undo();
         }
     }
 
@@ -188,11 +282,12 @@ public class java4 {
 
         View view;
 
-        // поліморфізм
         if (mode == 1)
             view = new ViewableResult().getView();
         else
             view = new ViewableTable().getView();
+
+        CommandManager manager = CommandManager.getInstance();
 
         while (true) {
 
@@ -201,6 +296,8 @@ public class java4 {
             System.out.println("2 - Показати");
             System.out.println("3 - Зберегти");
             System.out.println("4 - Вiдновити");
+            System.out.println("5 - Undo");
+            System.out.println("6 - Макрокоманда");
             System.out.println("0 - Вихiд");
 
             System.out.print("Введiть число: ");
@@ -208,10 +305,10 @@ public class java4 {
 
             switch (cmd) {
                 case 1:
-                    view.viewInit();
+                    manager.executeCommand(new InitCommand(view));
                     break;
                 case 2:
-                    view.viewShow();
+                    manager.executeCommand(new ShowCommand(view));
                     break;
                 case 3:
                     view.viewSave();
@@ -219,7 +316,16 @@ public class java4 {
                     break;
                 case 4:
                     view.viewRestore();
-                    System.out.println("Вiдновлено!");
+                    System.out.println("Відновлено!");
+                    break;
+                case 5:
+                    manager.undo();
+                    break;
+                case 6:
+                    MacroCommand macro = new MacroCommand();
+                    macro.add(new InitCommand(view));
+                    macro.add(new ShowCommand(view));
+                    manager.executeCommand(macro);
                     break;
                 case 0:
                     return;
