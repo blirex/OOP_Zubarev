@@ -19,3 +19,6 @@
 
 ## Завдання 5
 - [Завдання 5](oop_zubarev/task5/task5.md)
+
+## Завдання 6
+- [Завдання 6](oop_zubarev/task6/task6.md)
