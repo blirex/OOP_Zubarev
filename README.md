@@ -22,3 +22,6 @@
 
 ## Завдання 6
 - [Завдання 6](oop_zubarev/task6/task6.md)
+
+## Завдання на 5 балів
+- [Завдання на 5 балів](oop_zubarev/finalTask/finalTask.md)

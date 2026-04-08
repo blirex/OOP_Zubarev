@@ -250,18 +250,14 @@ public class java5 {
     /* ===================== MACRO ===================== */
 
     static class MacroCommand implements Command {
-
         private List<Command> commands = new ArrayList<>();
-
         public void add(Command c) {
             commands.add(c);
         }
-
         public void execute() {
             for (Command c : commands)
                 c.execute();
         }
-
         public void undo() {
             for (int i = commands.size() - 1; i >= 0; i--)
                 commands.get(i).undo();

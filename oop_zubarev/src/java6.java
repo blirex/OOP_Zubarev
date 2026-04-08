@@ -275,13 +275,10 @@ public class java6 {
     /* ===================== WORKER THREAD ===================== */
 
     static class Worker extends Thread {
-
         private BlockingQueue<Runnable> queue = new LinkedBlockingQueue<>();
-
         public void addTask(Runnable r) {
             queue.add(r);
         }
-
         public void run() {
             while (true) {
                 try {
@@ -360,4 +357,4 @@ public class java6 {
             }
         }
     }
-}
+} 

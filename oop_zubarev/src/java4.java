@@ -10,7 +10,7 @@ public class java4 {
 
         double alpha;
         int integerValue;
-        int maxOnes;
+        int maxOnes;    
 
         public CalculationData(double a, int i, int m) {
             alpha = a;
@@ -74,10 +74,8 @@ public class java4 {
     /* ===================== BASE VIEW ===================== */
 
     static class ViewResult implements View {
-
         protected ArrayList<CalculationData> list = new ArrayList<>();
         protected static final String FILE = "data.bin";
-
         @Override
         public void viewInit() {
             list.clear();
@@ -85,7 +83,6 @@ public class java4 {
                 list.add(Calculator.calculate(Math.random() * Math.PI));
             }
         }
-
         @Override
         public void viewShow() {
             System.out.println("\n=== РЕЗУЛЬТАТИ ===");
@@ -95,14 +92,12 @@ public class java4 {
                         " | max1 = " + d.maxOnes);
             }
         }
-
         @Override
         public void viewSave() throws IOException {
             ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(FILE));
             os.writeObject(list);
             os.close();
         }
-
         @Override
         public void viewRestore() throws Exception {
             ObjectInputStream is = new ObjectInputStream(new FileInputStream(FILE));
@@ -114,53 +109,40 @@ public class java4 {
     /* ===================== TABLE VIEW ===================== */
 
     static class ViewTable extends ViewResult {
-
         private int width = 30;
-
         public ViewTable() {}
-
         public ViewTable(int width) {
             this.width = width;
         }
-
         // overloading
         public void init(int width) {
             this.width = width;
             viewInit();
         }
-
         public void init(int width, double step) {
             this.width = width;
             init(step);
         }
-
         // overriding
         public void init(double step) {
             System.out.println("Інiціаiізацiя...");
             super.viewInit();
         }
-
         private void line() {
             for (int i = 0; i < width; i++) System.out.print("-");
             System.out.println();
         }
-
         @Override
         public void viewShow() {
-
             System.out.println("\nТАБЛИЦЯ:");
             line();
-
             System.out.printf("%-10s | %-10s | %-10s\n",
                     "alpha", "int", "max1");
-
             line();
-
             for (CalculationData d : list) {
                 System.out.printf("%-10.2f | %-10d | %-10d\n",
                         d.alpha, d.integerValue, d.maxOnes);
             }
-
             line();
         }
     }
